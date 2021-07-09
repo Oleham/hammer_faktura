@@ -302,6 +302,12 @@ def invoices(_from, to):
 
             res = ny
             result[i] = res
+        if res[2] == "USD":
+            ny = (res[0], res[1], "USD (* 8)", res[3], round(res[4] * 8, 2), round(res[5]*8, 2))
+
+            res = ny
+            result[i] = res
+
         ntotal += res[4]
         btotal += res[5]
 
