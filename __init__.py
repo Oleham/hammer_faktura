@@ -1,4 +1,4 @@
-import os, time, datetime, uuid
+import os, time, datetime
 
 # Constant
 HF_PATH = os.path.dirname(__file__)

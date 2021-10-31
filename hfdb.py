@@ -1,3 +1,8 @@
+"""
+module HFDB (Hammer Faktura Database) contains all client-facing functions for adding to and retrieving from the database.
+Functions are also used by the CLI tool.
+"""
+
 from . import sql_handler
 from . import Invoice, Client, Bank, Generator, str_to_ts, ts_to_str
 import time, uuid

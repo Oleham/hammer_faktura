@@ -126,6 +126,7 @@ if  len(ARGS) < 2 or len(ARGS) > 8:
 
         list: -l or --list (table name in plural, i.e. "invoices")
         add: -a or --add (item, bank, client or invoice)
+        print invoices: -inv or --invoices (specify time span, e.g. "01.01.2021" "02.01.2021")
         """)
 else:
     if ARGS[0] == "-l" or ARGS[0] == "--list":
