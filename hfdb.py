@@ -5,7 +5,7 @@ Functions are also used by the CLI tool.
 
 from . import sql_handler
 from . import Invoice, Client, Bank, Generator, str_to_ts, ts_to_str
-import time, uuid
+import time, uuid, csv
 from sqlite3 import IntegrityError
 
 def addItem(values):
@@ -264,12 +264,13 @@ def quickGeneratorFromItem(dato, id, beskrivelse, netto, client, bank):
 
 def invoices(_from, to):
     """
-    Retrieves the invoices between the set dates.
-    Arguments: from str, to str. Format strings like this: "01.01.1990"
+    Retrieves the invoices betweeen the set dates
+    Date strings should be formatted like this: "01.01.1990".
     """
 
     sql = """
     select 
+        invoices.dato,
         invoices.id, 
         clients.navn, 
         clients.valuta, 
@@ -281,7 +282,7 @@ def invoices(_from, to):
     where invoices.id = invoice_items.invoice 
     and invoices.dato between :from and :to
     group by invoice_items.invoice
-    order by invoices.client
+    order by invoices.dato
     """
 
     # Turn strings into timestamps
@@ -293,7 +294,39 @@ def invoices(_from, to):
         "from": from_ts
     }
 
-    result = sql_handler.retrieve_multi_wvalue(sql, values)
+    return sql_handler.retrieve_multi_wvalue(sql, values)
+
+def invoicesToCSV(_from, to, filename):
+    """
+    Retrieves the invoices betweeen the set dates and creates CSV.
+    Saves CSV as filename.
+    Date strings should be formatted like this: "01.01.1990".
+    """
+
+    invoiceData = invoices(_from, to)
+
+    for i, row in enumerate(invoiceData):
+        invoiceData[i] = (ts_to_str(row[0]), row[1], row[2], row[3], row[4], row[5], row[6])
+
+    with open(filename, "w") as f:
+
+        csvWriter = csv.writer(f)
+
+        csvWriter.writerow(("Date", "Invoice", "Client", "Currency", "VAT", "NETTO", "BRUTTO"))
+
+        for inv in invoiceData:
+            csvWriter.writerow(inv)
+
+
+
+
+def printInvoices(_from, to):
+    """
+    Retrieves the invoices between the set dates.
+    Arguments: from str, to str. Format strings like this: "01.01.1990"
+    """
+
+    result = invoices(_from, to)
 
     ntotal = 0.0
     btotal = 0.0
@@ -302,23 +335,22 @@ def invoices(_from, to):
 
 
         # Veldig stygg løsning for å bytte ut tuplene med EUR med tupler som har rundet opp euroen til tilnærmet kroner.
-        if res[2] == "EUR":
-            ny = (res[0], res[1], "EUR (* 10)", res[3], round(res[4] * 10, 2), round(res[5]*10, 2))
+        # samt oppdatere med dato.
+        if res[3] == "EUR":
+            result[i] = (ts_to_str(res[0]), res[1], res[2], "EUR (* 10)", res[4], round(res[5] * 10, 2), round(res[6]*10, 2))
 
-            res = ny
-            result[i] = res
-        if res[2] == "USD":
-            ny = (res[0], res[1], "USD (* 8)", res[3], round(res[4] * 8, 2), round(res[5]*8, 2))
+        elif res[3] == "USD":
+            result[i] = (ts_to_str(res[0]), res[1], res[2], "USD (* 8)", res[4], round(res[5] * 8, 2), round(res[6]*8, 2))
 
-            res = ny
-            result[i] = res
+        else: 
+            result[i] = (ts_to_str(res[0]), res[1], res[2], res[3], res[4], res[5], res[6])
 
-        ntotal += res[4]
-        btotal += res[5]
+        ntotal += res[5]
+        btotal += res[6]
 
-    result.insert(0, ("Invoice", "Client", "Currency", "VAT", "NETTO", "BRUTTO\n")) # <-- Merk linjeskift
-    result.append(("", "", "", "", "", ""))
-    result.append(("TOTAL", " ", " ", " ", round(ntotal, 2), round(btotal, 2)))
+    result.insert(0, ("Date", "Invoice", "Client", "Currency", "VAT", "NETTO", "BRUTTO\n")) # <-- Merk linjeskift
+    result.append(("", "", "", "", "", "", ""))
+    result.append(("TOTAL", " ", " ", " ", " ",  round(ntotal, 2), round(btotal, 2)))
 
     prettyPrinter(result)
 

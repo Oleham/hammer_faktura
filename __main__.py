@@ -1,5 +1,5 @@
 import sys
-from .hfdb import table, invoices, addBank, addClient, addItem
+from .hfdb import invoicesToCSV, table, printInvoices, addBank, addClient, addItem
 from sqlite3 import IntegrityError, OperationalError
 from . import str_to_ts
 
@@ -115,7 +115,13 @@ def invo(args):
     if len(args) != 2:
         print("""Usage: python -m hammer_faktura -inv '01.01.2021' '31.01.2021'""")
     else:
-        invoices(args[0], args[1])
+        printInvoices(args[0], args[1])
+
+def csv(args):
+    if len(args) != 3:
+        print("""Usage: python -m hammer_faktura -csv '01.01.2021' '31.01.2021' 'filename.csv'""")
+    else:
+        invoicesToCSV(args[0], args[1], args[2])
 
 
 # Start here
@@ -134,6 +140,9 @@ else:
 
     elif ARGS[0] == "-inv" or ARGS[0] == "--invoices":
         invo(ARGS[1:])
+    
+    elif ARGS[0] == "-csv" or ARGS[0] == "--csv":
+        csv(ARGS[1:])
 
     elif ARGS[0] == "-a" or ARGS[0] == "--add":
         add(ARGS[1:])
