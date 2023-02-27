@@ -345,8 +345,8 @@ def printInvoices(_from, to):
         else: 
             result[i] = (ts_to_str(res[0]), res[1], res[2], res[3], res[4], res[5], res[6])
 
-        ntotal += res[5]
-        btotal += res[6]
+        ntotal += result[i][5] # Bruke oppdaterte tall for at totalen skal gjenspeile forenklet valutaomregning fra NOK
+        btotal += result[i][6]
 
     result.insert(0, ("Date", "Invoice", "Client", "Currency", "VAT", "NETTO", "BRUTTO\n")) # <-- Merk linjeskift
     result.append(("", "", "", "", "", "", ""))
