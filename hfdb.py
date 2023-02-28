@@ -13,7 +13,7 @@ def addItem(values):
     Adds an invoice item to the database.
     Arguments: dict = {"dato": int, "id": str, "beskrivelse": str, "netto": float, "client": int}
     Optional = {"vat": float}
-    Returns None
+    Returns pk
     """
     values.setdefault("vat", None)
 
