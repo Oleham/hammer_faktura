@@ -1,0 +1,34 @@
+<hr>
+    <table class="oppdragsliste">
+        <colgroup>
+            <col width="10%" />
+            <col width="20%" />
+            <col width="40%" />
+            <col width="10%" />
+            <col width="10%" />
+            <col width="10%" />
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th align="left">DATUM</th>
+                <th align="left">ID</th>
+                <th align="left">BESCHREIBUNG</th>
+                <th align="right">NETTO<br>({valuta})</th>
+                <th align="right">MWST</th>
+                <th align="right">BRUTTO<br>({valuta})</th>
+            </tr>
+        </thead>
+    <tbody>
+
+        {tabell}
+
+    </tbody>
+</table>
+
+<hr>
+
+<div class="total">
+    <strong>Zwischensumme ohne Mwst: {netto:.2f} {valuta}</strong><br>
+    <strong>Betrag Mwst (0%): {totalMVA:.2f} {valuta}</strong><br>
+    <strong>Gesamtbetrag: {brutto:.2f} {valuta}</strong><br>
+</div>

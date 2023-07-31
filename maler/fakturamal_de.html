@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">     
+        {style}   
+    </head>
+
+    <body>
+        <div class="topp">
+            OLEHAM AS –– MwSt.nr. 928 538 605 MVA –– Louises gate 24b, 0169 Oslo, Norway
+        </div>
+                    
+        <table>
+            <tr>
+                <td class="kundeinfo">
+                    <p><strong>Kunde</strong></p>
+                    <p>{navn}</p>
+                    <p>Identifkationsnummer {org_nr}</p>
+                    <p>Addresse  {adresse}</p>
+                    
+                </td>
+
+                <td class="fakturainfo">
+                    <h1>Rechnung</h1>
+                    <p>Rechnungnr: {id}</p>
+                    <p>Rechnungsdatum: {dato}</p>
+                    <p>Zahlbar bis: {forfall}</p>
+                    
+                </td>
+            </tr>
+        </table>
+
+            {table}
+
+        <p>Vielen Dank für die Zusammenarbeit. Bitte bezahlen Sie die Rechnung bis spätestens <strong>{forfall}</strong></p>
+        <p>Achtung: Es handelt sich um eine steuerfreie, innergemeinschaftliche Lieferung.</p>
+        <p>
+            <div class="bankinfo">
+            <strong>Bankverbindung:</strong><br>
+            OLEHAM AS<br>
+            Kontennummer: {konto}<br>
+            IBAN: {iban}<br>
+            BIC: {bic}<br>
+            Bank: {bank}
+            </div>
+        </p>
+
+    </body>
+</html>
