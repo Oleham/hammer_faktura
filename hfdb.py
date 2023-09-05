@@ -95,17 +95,10 @@ def addInvoice(client, bank, dato=int(time.time()), frist=30, language="NO"):
 
     sql = """
         INSERT INTO invoices
-        VALUES (:id,:dato,:forfall,:language,:client,:bank)
+        VALUES (:id,:dato,:forfall,:language,:client,:bank);
         """
 
-    sql_handler.execute(sql, values)
-
-    # Retrieve the new invoice number to return 
-    sql = """
-        SELECT id FROM invoices WHERE dato=(SELECT MAX(dato) FROM invoices) AND client=:client;
-        """
-
-    return sql_handler.retrieve_one_wvalue(sql, {"client": client})
+    return sql_handler.execute(sql, values)
 
 def makeGenerator(id):
     """
